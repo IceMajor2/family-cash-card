@@ -12,6 +12,6 @@ public class CashCardController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CashCard> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(new CashCard(33L, 55.5));
+        return ResponseEntity.ok(new CashCard(99L, 55.5));
     }
 }
