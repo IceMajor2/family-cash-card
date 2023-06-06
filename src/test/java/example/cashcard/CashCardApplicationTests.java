@@ -69,10 +69,9 @@ class CashCardApplicationTests {
     }
 
     @Test
-    void shouldReturnAllCashCardsWhenListIsRequested() {
+    public void shouldReturnAllCashCardsWhenListIsRequested() {
         ResponseEntity<String> response = restTemplate.getForEntity("/cashcards", String.class);
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-
 
         DocumentContext documentContext = JsonPath.parse(response.getBody());
         int cashCardCount = documentContext.read("$.length()");
@@ -83,5 +82,18 @@ class CashCardApplicationTests {
 
         JSONArray amounts = documentContext.read("$..amount");
         assertThat(amounts).containsExactlyInAnyOrder(123.45, 1.00, 150.00);
+    }
+
+    @Test
+    public void shouldReturnOneCashCardPerPage() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards?page=0&size=1", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(1);
+        // alternatively:
+        // int cardsOnPage = documentContext.read("$.length()");
+        // assertThat(cardsOnPage).isEqualTo(1);
     }
 }
