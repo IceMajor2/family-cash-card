@@ -96,4 +96,19 @@ class CashCardApplicationTests {
         // int cardsOnPage = documentContext.read("$.length()");
         // assertThat(cardsOnPage).isEqualTo(1);
     }
+
+    @Test
+    public void shouldReturnSingleEntityPageSortedByAmountDesc() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards?page=0&size=1&sort=amount,desc", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        assertThat(page.size()).isEqualTo(1);
+
+        Number id = documentContext.read("$[0].id");
+        double amount = documentContext.read("$[0].amount");
+        assertThat(id).isEqualTo(101);
+        assertThat(amount).isEqualTo(150.00);
+    }
 }
