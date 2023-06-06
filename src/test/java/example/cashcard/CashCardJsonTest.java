@@ -16,8 +16,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class CashCardJsonTest {
 
     @Autowired
+    // class for testing object-mapping to JSON. Here the object are of CashCard class
     private JacksonTester<CashCard> json;
 
+    // and here it's an array of CashCards
     @Autowired
     private JacksonTester<CashCard[]> jsonList;
 
@@ -34,6 +36,8 @@ public class CashCardJsonTest {
     @Test
     public void cashCardSerializationTest() throws IOException {
         CashCard cashCard = cashCards[0];
+        // map cashCard to Json and assert it is equal to the
+        // response body contained in 'single.json' file
         assertThat(json.write(cashCard)).isStrictlyEqualToJson("single.json");
         assertThat(json.write(cashCard)).hasJsonPathNumberValue("@.id");
         assertThat(json.write(cashCard)).extractingJsonPathNumberValue("@.id")
@@ -51,6 +55,8 @@ public class CashCardJsonTest {
                     "amount": 123.45
                 }
                 """;
+        // check if the above json body (that matches CashCard records)
+        // is equal to the below object after mapping
         assertThat(json.parse(expected))
                 .isEqualTo(new CashCard(99L, 123.45));
         assertThat(json.parseObject(expected).id()).isEqualTo(99);
