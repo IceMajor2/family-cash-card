@@ -1,9 +1,13 @@
 package example.cashcard;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -26,30 +30,29 @@ public class CashCardController {
     }
 
     @PostMapping
-    private ResponseEntity save(@RequestBody CashCard cashCard) {
+    private ResponseEntity<CashCard> save(@RequestBody CashCard cashCard) {
         CashCard savedCashCard = cashCardRepository.save(cashCard);
         return ResponseEntity.created
-                (URI.create("/cashcards/%d".formatted(savedCashCard.id())))
+                        (URI.create("/cashcards/%d".formatted(savedCashCard.id())))
                 .body(savedCashCard);
-    }
-
-    @GetMapping()
-    private ResponseEntity findAll() {
-        var cashCards = cashCardRepository.findAll();
-        return ResponseEntity.ok().body(cashCards);
-    }
-
-    // alternative approach:
-    /**
-     * Spring academy
-    @PostMapping
-    private ResponseEntity<Void> add(@RequestBody CashCard newCashCardRequest, UriComponentsBuilder ucb) {
-        CashCard savedCashCard = cashCardRepository.save(newCashCardRequest);
+        /* alternatively:
+        with parameter in method: 'UriComponentsBuilder ucb'
         URI locationOfNewCashCard = ucb
                 .path("cashcards/{id}")
                 .buildAndExpand(savedCashCard.id())
                 .toUri();
-        return ResponseEntity.created(locationOfNewCashCard).build();
+         */
     }
-     */
+
+    @GetMapping()
+    private ResponseEntity<List<CashCard>> findAll(Pageable pageable) {
+        Page<CashCard> page = cashCardRepository.findAll(
+                PageRequest.of(
+                        pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        pageable.getSort()
+                )
+        );
+        return ResponseEntity.ok().body(page.getContent());
+    }
 }
