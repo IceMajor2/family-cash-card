@@ -111,4 +111,22 @@ class CashCardApplicationTests {
         assertThat(id).isEqualTo(101);
         assertThat(amount).isEqualTo(150.00);
     }
+
+    @Test
+    public void shouldReturnSortedPageWithoutParametersByDefault() {
+        ResponseEntity<String> response = restTemplate.getForEntity("/cashcards", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(response.getBody());
+        JSONArray page = documentContext.read("$[*]");
+        // 3 is more than a reasonable number of CashCard
+        // objects to be displayed at one page
+        assertThat(page.size()).isEqualTo(3);
+
+        JSONArray amounts = documentContext.read("$..amount");
+        assertThat(amounts).containsExactly(1.00, 123.45, 150.00);
+
+        JSONArray ids = documentContext.read("$..id");
+        assertThat(ids).containsExactly(100, 99, 101);
+    }
 }
