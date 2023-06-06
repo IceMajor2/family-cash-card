@@ -51,7 +51,14 @@ class CashCardApplicationTests {
 
         // check if database was updated
         URI location = postResponse.getHeaders().getLocation();
-        ResponseEntity getResponse = restTemplate.getForEntity(location, String.class);
+        ResponseEntity<String> getResponse = restTemplate.getForEntity(location, String.class);
         assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+        Number id = documentContext.read("$.id");
+        Double amount = documentContext.read("$.amount");
+
+        assertThat(id).isNotNull();
+        assertThat(amount).isEqualTo(535d);
     }
 }
