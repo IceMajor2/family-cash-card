@@ -4,7 +4,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Optional;
 
 @RestController
@@ -27,7 +26,22 @@ public class CashCardController {
     }
 
     @PostMapping
-    public ResponseEntity add(@RequestBody CashCard cashCard) throws URISyntaxException {
-        return ResponseEntity.created(new URI("/cashcards")).build();
+    public ResponseEntity add(@RequestBody CashCard cashCard) {
+        CashCard savedCashCard = cashCardRepository.save(cashCard);
+        return ResponseEntity.created(URI.create("/cashcards/%d".formatted(savedCashCard.id()))).build();
     }
+
+    //alternative approach:
+    /**
+     * Spring academy
+    @PostMapping
+    private ResponseEntity<Void> add(@RequestBody CashCard newCashCardRequest, UriComponentsBuilder ucb) {
+        CashCard savedCashCard = cashCardRepository.save(newCashCardRequest);
+        URI locationOfNewCashCard = ucb
+                .path("cashcards/{id}")
+                .buildAndExpand(savedCashCard.id())
+                .toUri();
+        return ResponseEntity.created(locationOfNewCashCard).build();
+    }
+     */
 }
