@@ -1,11 +1,10 @@
 package example.cashcard;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 @RestController
@@ -21,9 +20,14 @@ public class CashCardController {
     @GetMapping("/{id}")
     public ResponseEntity<CashCard> findById(@PathVariable Long id) {
         Optional<CashCard> optCashCard = cashCardRepository.findById(id);
-        if(optCashCard.isPresent()) {
+        if (optCashCard.isPresent()) {
             return ResponseEntity.ok(optCashCard.get());
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @PostMapping
+    public ResponseEntity add(@RequestBody CashCard cashCard) throws URISyntaxException {
+        return ResponseEntity.created(new URI("/cashcards")).build();
     }
 }
