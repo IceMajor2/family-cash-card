@@ -28,10 +28,12 @@ public class CashCardController {
     @PostMapping
     public ResponseEntity add(@RequestBody CashCard cashCard) {
         CashCard savedCashCard = cashCardRepository.save(cashCard);
-        return ResponseEntity.created(URI.create("/cashcards/%d".formatted(savedCashCard.id()))).build();
+        return ResponseEntity.created
+                (URI.create("/cashcards/%d".formatted(savedCashCard.id())))
+                .body(savedCashCard);
     }
 
-    //alternative approach:
+    // alternative approach:
     /**
      * Spring academy
     @PostMapping
