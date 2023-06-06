@@ -16,7 +16,9 @@ import java.net.URI;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)  // makes each test start with a clean slate
+                                                                                // but should be used for good reason
+                                                                                // so rather assign this annotation to a method
 class CashCardApplicationTests {
 
     // @Autowired should be used mainly in tests, not in source code
@@ -46,6 +48,7 @@ class CashCardApplicationTests {
     }
 
     @Test
+    @DirtiesContext // here is a post method: good place to put this annotation
     public void shouldAddCashCardToDatabase() {
         CashCard newCashCard = new CashCard(null, 535d);
         ResponseEntity postResponse = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
