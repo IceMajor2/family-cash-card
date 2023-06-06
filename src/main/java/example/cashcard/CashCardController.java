@@ -17,7 +17,7 @@ public class CashCardController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CashCard> findById(@PathVariable Long id) {
+    private ResponseEntity<CashCard> findById(@PathVariable Long id) {
         Optional<CashCard> optCashCard = cashCardRepository.findById(id);
         if (optCashCard.isPresent()) {
             return ResponseEntity.ok(optCashCard.get());
@@ -26,11 +26,17 @@ public class CashCardController {
     }
 
     @PostMapping
-    public ResponseEntity add(@RequestBody CashCard cashCard) {
+    private ResponseEntity save(@RequestBody CashCard cashCard) {
         CashCard savedCashCard = cashCardRepository.save(cashCard);
         return ResponseEntity.created
                 (URI.create("/cashcards/%d".formatted(savedCashCard.id())))
                 .body(savedCashCard);
+    }
+
+    @GetMapping()
+    private ResponseEntity findAll() {
+        var cashCards = cashCardRepository.findAll();
+        return ResponseEntity.ok().body(cashCards);
     }
 
     // alternative approach:
