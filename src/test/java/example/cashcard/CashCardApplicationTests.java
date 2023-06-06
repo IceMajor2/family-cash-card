@@ -9,6 +9,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.net.URI;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,9 +45,13 @@ class CashCardApplicationTests {
     @Test
     public void shouldAddCashCardToDatabase() {
         CashCard newCashCard = new CashCard(null, 535d);
-        ResponseEntity response = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
+        ResponseEntity postResponse = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+
+        // check if database was updated
+        URI location = postResponse.getHeaders().getLocation();
+        ResponseEntity getResponse = restTemplate.getForEntity(location, String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
-
 }
