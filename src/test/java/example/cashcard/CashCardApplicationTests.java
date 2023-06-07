@@ -214,7 +214,7 @@ class CashCardApplicationTests {
     }
 
     @Test
-    public void shouldReturnNotFoundWhenUpdatingNonExisitingCard() {
+    public void shouldReturnNotFoundWhenUpdatingNonExistingCard() {
         CashCard cashCardUpdate = new CashCard(null, 19.99, null);
         HttpEntity<CashCard> request = new HttpEntity<>(cashCardUpdate);
         ResponseEntity<Void> putResponse = restTemplate
@@ -222,5 +222,13 @@ class CashCardApplicationTests {
                 .exchange("/cashcards/50", HttpMethod.PUT, request, Void.class);
 
         assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
+
+    @Test
+    public void deleteShouldReturnNoContent() {
+        ResponseEntity<Void> deleteResponse = restTemplate
+                .withBasicAuth("sarah1", "")
+                .exchange("/cashcards/101", HttpMethod.DELETE, null, Void.class);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
 }
