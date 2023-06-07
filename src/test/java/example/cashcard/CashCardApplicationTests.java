@@ -154,4 +154,21 @@ class CashCardApplicationTests {
         ResponseEntity<Void> postResponse = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
+
+    @Test
+    public void nonOwnersShouldBeForbiddenFromGettingCards() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("hank", "")
+                .getForEntity("/cashcards", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
+
+    @Test
+    public void nonOwnersShouldBeForbiddenFromGettingSomeonesCards() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("hank", "")
+                .getForEntity("/cashcards/99", String.class);
+        // ^ user 'hank' tries to get 'sarah1' card
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
 }
