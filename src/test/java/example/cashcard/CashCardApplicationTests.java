@@ -188,13 +188,28 @@ class CashCardApplicationTests {
         // assign new cash card fields for an existing card
         CashCard cashCardUpdate = new CashCard(null, 19.99, null);
         HttpEntity<CashCard> request = new HttpEntity<>(cashCardUpdate);
-        ResponseEntity<Void> response = restTemplate
+        ResponseEntity<Void> putResponse = restTemplate
                 .withBasicAuth("sarah1", "")
                 // the updated card ('cashCardUpdate') will be replacing
                 // the cash card of id = 99
                 // (if there were no card of id = 99, there'd be no update)
                 .exchange("/cashcards/99", HttpMethod.PUT, request, Void.class);
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        ResponseEntity<String> getResponse = restTemplate
+                .withBasicAuth("sarah1", "")
+                .getForEntity("/cashcards/99", String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+
+        DocumentContext documentContext = JsonPath.parse(getResponse.getBody());
+        Number id = documentContext.read("$.id");
+        assertThat(id).isEqualTo(99);
+
+        Double amount = documentContext.read("$.amount");
+        assertThat(amount).isEqualTo(19.99);
+
+        String owner = documentContext.read("$.owner");
+        assertThat(owner).isEqualTo("sarah1");
     }
 }
