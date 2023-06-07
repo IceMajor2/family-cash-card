@@ -19,14 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)  // makes each test start with a clean slate
-                                                                                // but should be used for good reason
-                                                                                // so rather assign this annotation to a method
+        // but should be used for good reason
+        // so rather assign this annotation to a method
 class CashCardApplicationTests {
 
     // @Autowired should be used mainly in tests, not in source code
     @Autowired
     // rest template helper for tests to make HTTP requests
-    TestRestTemplate restTemplate;
+            TestRestTemplate restTemplate;
 
     @Test
     public void shouldReturnCashCardWhenDataIsSaved() {
@@ -225,10 +225,20 @@ class CashCardApplicationTests {
     }
 
     @Test
+    @DirtiesContext
     public void deleteShouldReturnNoContent() {
         ResponseEntity<Void> deleteResponse = restTemplate
                 .withBasicAuth("sarah1", "")
                 .exchange("/cashcards/101", HttpMethod.DELETE, null, Void.class);
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DirtiesContext
+    public void differentOwnerShouldNotDeleteOthersCards() {
+        ResponseEntity<Void> deleteResponse = restTemplate
+                .withBasicAuth("hank", "")
+                .exchange("/cashcards/102", HttpMethod.DELETE, null, Void.class);
+        assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 }
