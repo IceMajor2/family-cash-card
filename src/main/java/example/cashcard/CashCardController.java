@@ -50,7 +50,7 @@ public class CashCardController {
         Page<CashCard> page = cashCardRepository.findAll(
                 PageRequest.of(
                         pageable.getPageNumber(),
-                        pageable.getPageSize(),
+                        pageable.getPageSize(), // if not provided, default is 20
                         pageable.getSortOr(Sort.by(Sort.Direction.ASC, "amount"))
                 )
         );
