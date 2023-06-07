@@ -31,7 +31,8 @@ public class CashCardJsonTest {
         cashCards = Arrays.array(
                 new CashCard(99L, 123.45, "sarah1"),
                 new CashCard(100L, 1.00, "sarah1"),
-                new CashCard(101L, 150.00, "sarah1"));
+                new CashCard(101L, 150.00, "sarah1"),
+                new CashCard(1L, 500.00, "mike"));
     }
 
     @Test
@@ -88,6 +89,11 @@ public class CashCardJsonTest {
                         "id": 101,
                         "amount": 150.00,
                         "owner": "sarah1"
+                    },
+                    {
+                        "id": 1,
+                        "amount": 500.00,
+                        "owner": "mike"
                     }
                 ]
                 """;
