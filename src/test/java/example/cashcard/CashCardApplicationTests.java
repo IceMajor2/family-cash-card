@@ -237,7 +237,7 @@ class CashCardApplicationTests {
     @DirtiesContext
     public void differentOwnerShouldNotDeleteOthersCards() {
         ResponseEntity<Void> deleteResponse = restTemplate
-                .withBasicAuth("hank", "")
+                .withBasicAuth("sarah1", "")
                 .exchange("/cashcards/102", HttpMethod.DELETE, null, Void.class);
         assertThat(deleteResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
