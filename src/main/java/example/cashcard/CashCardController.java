@@ -77,6 +77,7 @@ public class CashCardController {
         if(optCashCard.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
+        cashCardRepository.delete(optCashCard.get());
         return ResponseEntity.noContent().build();
     }
 }
