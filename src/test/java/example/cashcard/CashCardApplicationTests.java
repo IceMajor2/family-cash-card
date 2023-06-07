@@ -171,4 +171,12 @@ class CashCardApplicationTests {
         // ^ user 'hank' tries to get 'sarah1' card
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
+
+    @Test
+    public void differentOwnerShouldNotGetOthersCards() {
+        ResponseEntity<String> response = restTemplate
+                .withBasicAuth("mike", "")
+                .getForEntity("/cashcards/99", String.class);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+    }
 }
