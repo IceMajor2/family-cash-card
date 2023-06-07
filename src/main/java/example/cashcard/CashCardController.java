@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,8 +23,8 @@ public class CashCardController {
     }
 
     @GetMapping("/{id}")
-    private ResponseEntity<CashCard> findById(@PathVariable Long id) {
-        Optional<CashCard> optCashCard = cashCardRepository.findById(id);
+    private ResponseEntity<CashCard> findById(@PathVariable Long id, Principal principal) {
+        Optional<CashCard> optCashCard = cashCardRepository.findByIdAndOwner(id, principal.getName());
         if (optCashCard.isPresent()) {
             return ResponseEntity.ok(optCashCard.get());
         }
@@ -46,8 +47,8 @@ public class CashCardController {
     }
 
     @GetMapping()
-    private ResponseEntity<List<CashCard>> findAll(Pageable pageable) {
-        Page<CashCard> page = cashCardRepository.findAll(
+    private ResponseEntity<List<CashCard>> findAll(Pageable pageable, Principal principal) {
+        Page<CashCard> page = cashCardRepository.findByOwner(principal.getName(), 
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(), // if not provided, default is 20
