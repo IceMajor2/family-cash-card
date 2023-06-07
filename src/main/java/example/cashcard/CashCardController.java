@@ -70,4 +70,9 @@ public class CashCardController {
         cashCardRepository.save(updatedCashCard);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity<Void> delete(@PathVariable Long id, Principal principal) {
+        return ResponseEntity.noContent().build();
+    }
 }
