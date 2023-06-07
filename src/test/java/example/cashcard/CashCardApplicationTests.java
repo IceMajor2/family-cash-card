@@ -144,4 +144,14 @@ class CashCardApplicationTests {
         JSONArray ids = documentContext.read("$..id");
         assertThat(ids).containsExactly(100, 99, 101);
     }
+
+    @Test
+    public void shouldReturnUnauthorizedOnAnyRequest() {
+        ResponseEntity<String> getResponse = restTemplate.getForEntity("/cashcards", String.class);
+        assertThat(getResponse.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+
+        CashCard newCashCard = new CashCard(null, 100d, "ja");
+        ResponseEntity<Void> postResponse = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
+        assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
 }
