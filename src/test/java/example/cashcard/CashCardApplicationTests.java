@@ -50,7 +50,7 @@ class CashCardApplicationTests {
     @Test
     @DirtiesContext // here is a post method: good place to put this annotation
     public void shouldAddCashCardToDatabase() {
-        CashCard newCashCard = new CashCard(null, 535d);
+        CashCard newCashCard = new CashCard(null, 535d, "sarah1");
         ResponseEntity postResponse = restTemplate.postForEntity("/cashcards", newCashCard, Void.class);
 
         assertThat(postResponse.getStatusCode()).isEqualTo(HttpStatus.CREATED);
