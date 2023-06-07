@@ -30,7 +30,7 @@ public class CashCardController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping
+    @PostMapping()
     private ResponseEntity<CashCard> save(@RequestBody CashCard cashCard) {
         CashCard savedCashCard = cashCardRepository.save(cashCard);
         return ResponseEntity.created
