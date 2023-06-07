@@ -54,7 +54,7 @@ class CashCardApplicationTests {
     @Test
     @DirtiesContext // here is a post method: good place to put this annotation
     public void shouldAddCashCardToDatabase() {
-        CashCard newCashCard = new CashCard(null, 535.00, "sarah1");
+        CashCard newCashCard = new CashCard(null, 535.00, null);
         ResponseEntity postResponse = restTemplate
                 .withBasicAuth("sarah1", "")
                 .postForEntity("/cashcards", newCashCard, Void.class);

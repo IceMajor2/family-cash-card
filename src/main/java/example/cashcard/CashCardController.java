@@ -32,8 +32,9 @@ public class CashCardController {
     }
 
     @PostMapping()
-    private ResponseEntity<CashCard> save(@RequestBody CashCard cashCard) {
-        CashCard savedCashCard = cashCardRepository.save(cashCard);
+    private ResponseEntity<CashCard> save(@RequestBody CashCard cashCard, Principal principal) {
+        CashCard newCashCard = new CashCard(null, cashCard.amount(), principal.getName());
+        CashCard savedCashCard = cashCardRepository.save(newCashCard);
         return ResponseEntity.created
                         (URI.create("/cashcards/%d".formatted(savedCashCard.id())))
                 .body(savedCashCard);
@@ -48,7 +49,7 @@ public class CashCardController {
 
     @GetMapping()
     private ResponseEntity<List<CashCard>> findAll(Pageable pageable, Principal principal) {
-        Page<CashCard> page = cashCardRepository.findByOwner(principal.getName(), 
+        Page<CashCard> page = cashCardRepository.findByOwner(principal.getName(),
                 PageRequest.of(
                         pageable.getPageNumber(),
                         pageable.getPageSize(), // if not provided, default is 20
