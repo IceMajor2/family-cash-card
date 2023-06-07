@@ -44,8 +44,13 @@ public class SecurityConfig {
         UserDetails sarah = users
                 .username("sarah1")
                 .password(passwordEncoder.encode(""))
-                .roles() // No roles for now
+                .roles("CARD-OWNER") // No roles for now
                 .build();
-        return new InMemoryUserDetailsManager(sarah);
+        UserDetails hank = users
+                .username("hank")
+                .password(passwordEncoder.encode(""))
+                .roles("NON-OWNER") // new role
+                .build();
+        return new InMemoryUserDetailsManager(sarah, hank);
     }
 }
