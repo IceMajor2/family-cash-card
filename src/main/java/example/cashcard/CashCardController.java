@@ -60,10 +60,10 @@ public class CashCardController {
     }
 
     @PutMapping("/{id}")
-    private ResponseEntity<CashCard> update(@PathVariable Long id, CashCard cashCard, Principal principal) {
-//        if(cashCardRepository.findByIdAndOwner(id, principal.getName()).isEmpty()) {
-//
-//        }
+    private ResponseEntity<CashCard> update(@PathVariable Long id, @RequestBody CashCard cashCardUpdate, Principal principal) {
+        CashCard cashCard = cashCardRepository.findByIdAndOwner(id, principal.getName()).get();
+        CashCard updatedCashCard = new CashCard(cashCard.id(), cashCardUpdate.amount(), principal.getName());
+        cashCardRepository.save(updatedCashCard);
         return ResponseEntity.noContent().build();
     }
 }
