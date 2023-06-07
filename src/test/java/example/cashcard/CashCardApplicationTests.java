@@ -212,4 +212,15 @@ class CashCardApplicationTests {
         String owner = documentContext.read("$.owner");
         assertThat(owner).isEqualTo("sarah1");
     }
+
+    @Test
+    public void shouldReturnNotFoundWhenUpdatingNonExisitingCard() {
+        CashCard cashCardUpdate = new CashCard(null, 19.99, null);
+        HttpEntity<CashCard> request = new HttpEntity<>(cashCardUpdate);
+        ResponseEntity<Void> putResponse = restTemplate
+                .withBasicAuth("sarah1", "")
+                .exchange("/cashcards/50", HttpMethod.PUT, request, Void.class);
+
+        assertThat(putResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+    }
 }
