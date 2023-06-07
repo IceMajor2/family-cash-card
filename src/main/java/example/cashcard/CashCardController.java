@@ -58,4 +58,12 @@ public class CashCardController {
         );
         return ResponseEntity.ok().body(page.getContent());
     }
+
+    @PutMapping("/{id}")
+    private ResponseEntity<CashCard> update(@PathVariable Long id, CashCard cashCard, Principal principal) {
+//        if(cashCardRepository.findByIdAndOwner(id, principal.getName()).isEmpty()) {
+//
+//        }
+        return ResponseEntity.noContent().build();
+    }
 }
